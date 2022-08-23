@@ -10,14 +10,20 @@ if exist %_fn%.gb del %_fn%.gb
 
 echo Assembling...
 rgbasm -o%_fn%.o %1
+if ERRORLEVEL 1 goto :error
 echo Linking...
-rgblink -n%_fn%.sym -m%_fn%.map %_fn%.o -o %_fn%.gb
+rgblink -n%_fn%.sym -m%_fn%.map -o %_fn%.gb %_fn%.o
+if ERRORLEVEL 1 goto :error
 echo Fixing...
 rgbfix -p 255 -v %_fn%.gb
+if ERRORLEVEL 1 goto :error
 
-echo Generated: %_fn%.gb
+echo Created: %_fn%.gb
 del *.o
+goto :end
 
+:error
+echo Build failed.
+
+:end
 endlocal
-
-
