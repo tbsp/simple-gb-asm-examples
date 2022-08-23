@@ -8,6 +8,9 @@ set _fn=%~n1
 
 if exist %_fn%.gb del %_fn%.gb
 
+echo Asset conversion...
+for %%f in (*.png) do rgbgfx -u -o %%~nf.2bpp -t %%~nf.tilemap "%%f"
+
 echo Assembling...
 rgbasm -o%_fn%.o %1
 if ERRORLEVEL 1 goto :error

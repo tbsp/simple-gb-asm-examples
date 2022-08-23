@@ -14,6 +14,11 @@ if [ -f $fn.gb ]
    rm $fn.gb
 fi
 
+echo "Asset conversion..."
+for file in *.png; do
+  rgbgfx -u -o ${file%.*}.2bpp -t ${file%.*}.tilemap $file;
+done
+
 echo "Assembling..."
 rgbasm -o$fn.o $1 || error
 echo "Linking..."
