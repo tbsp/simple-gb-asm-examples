@@ -75,8 +75,8 @@ LoopForever:
 
 ; Tiles from public domain "Abandonauts" tileset by Adam Atomic (http://adamatomic.com/abandonauts/)
 TileData:
-    incbin "abandonauts-mockup.2bpp"    ; Include binary tile data inline using incbin
+    incbin "abandonauts-tilemap.2bpp"    ; Include binary tile data inline using incbin
 .end                                    ; The .end label is used to let the assembler calculate the length of the data
 
 TilemapData:
-    incbin "abandonauts-mockup.tilemap" ; Both the tiles and tilemap are generated using RGBGFX in the build script
+    incbin "abandonauts-tilemap.tilemap" ; Both the tiles and tilemap are generated using RGBGFX in the build script
