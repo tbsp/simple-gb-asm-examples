@@ -15,12 +15,18 @@ if [ -f $fn.gb ]
 fi
 
 echo "Asset conversion..."
-for file in *.png; do
+# Convert *tilemap.png files to 2bpp format including a tilemap (remove duplicate tiles)
+for file in *tilemap.png; do
   rgbgfx -u -o ${file%.*}.2bpp -t ${file%.*}.tilemap $file;
 done
 
+# Convert *tiles.png files to 2bpp format without a tilemap (keep duplicate tiles)
+for file in *tiles.png; do
+  rgbgfx -o ${file%.*}.2bpp $file;
+done
+
 echo "Assembling..."
-rgbasm -o$fn.o $1 || error
+rgbasm -h -o$fn.o $1 || error
 echo "Linking..."
 rgblink -n$fn.sym -m$fn.map -o$fn.gb $fn.o || error
 echo "Fixing..."
