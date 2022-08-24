@@ -22,9 +22,14 @@ The example should assemble/link/fix, creating a ready-to-run ROM. Symbol and ma
 
 # Examples
 
-| Name              | Description                                     |
-|-------------------|-------------------------------------------------|
-|background-tile    | Show a single background tile                   |
+| Name              | Description                                                           |
+|-------------------|-----------------------------------------------------------------------|
+|background-tile    | Show a single background tile                                         |
+|background-tilemap | Show a background tilemap                                             |
+|sprite             | Show two sprites manually copied to OAM RAM                           |
+|oamdma             | Show 40 sprites copied using OAM DMA                                  |
+|vblank             | Use the vblank interrupt to limit main loop speed with an animation   |
+|joypad             | Poll the joypad and display the button states                         |
 
 # License
 
