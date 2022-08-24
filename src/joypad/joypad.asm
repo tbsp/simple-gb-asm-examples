@@ -31,6 +31,8 @@ EntryPoint:
     ld a, 0             ; Once we exit the loop we're safely in VBlank
     ldh [rLCDC], a      ; Disable the LCD (must be done during VBlank to protect the LCD)
 
+    ldh [hCurrentKeys], a ; Zero our current keys just to be safe (A is already zero from earlier)
+
     ; Copy our tiles to VRAM
     ld hl, TileData     ; Load the source address of our tiles into HL
     ld de, _VRAM        ; Load the destination address in VRAM into DE

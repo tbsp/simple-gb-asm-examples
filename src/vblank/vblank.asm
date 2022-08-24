@@ -51,6 +51,8 @@ EntryPoint:
     xor a               ; Once we exit the loop we're safely in VBlank
     ldh [rLCDC], a      ; Disable the LCD (must be done during VBlank to protect the LCD)
 
+    ldh [hFrameCounter], a ; Zero our frame counter just to be safe (A is already zero from earlier)
+
     ; Copy the OAMDMA routine to HRAM, since during DMA we're limited on which
     ;  memory the CPU can access (but HRAM is safe)
     ld hl, OAMDMA       ; Load the source address of our routine into HL
@@ -78,8 +80,12 @@ EntryPoint:
     ld a, %11100100     ; Define a 4-shade palette from darkest (11) to lightest (00)
     ldh [rOBP0], a      ; Set the onject palette 0
 
-    ; Ensure the sprite locations (in wShadowOAM) are initalized so the VBlank call to OAMDMA doesn't trasfer garbage
+    ; Ensure the sprite locations (in wShadowOAM) are initalized for OAM DMA
     call PopulateShadowOAM
+
+    ; Perform OAM DMA once to ensure OAM doesn't contain garbage
+    ld a, HIGH(wShadowOAM) ; Load the high byte of our Shadow OAM buffer into A
+    call hOAMDMA         ; Call our OAM DMA routine (in HRAM), quickly copying from wShadowOAM to OAMRAM
 
     ; Setup the VBlank interrupt
     ld a, IEF_VBLANK    ; Load the flag to enable the VBlank interrupt into A
@@ -87,8 +93,6 @@ EntryPoint:
     xor a               ; Set A to zero
     ldh [rIF], a        ; Clear any lingering flags from the interrupt flag register to avoid false interrupts
     ei                  ; enable interrupts!
-
-    ldh [hFrameCounter], a ; Zero our frame counter just to be safe (reuses the `xor a` from earlier)
 
     ; Combine flag constants defined in hardware.inc into a single value with logical ORs and load it into A
     ; Note that some of these constants (LCDCF_BGOFF, LCDCF_OBJ8, LCDCF_WINOFF) are zero, but are included for clarity
