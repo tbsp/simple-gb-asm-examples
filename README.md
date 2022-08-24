@@ -11,7 +11,7 @@ A simple batch file (Windows) and bash script (GNU/Linux) are provided for quick
 To build an example, navigate to a given example's directory, such as `/src/background-tile`, and run:
 
 - Windows: `..\build.bat background-tile.asm`
-- Linux: `..\build.sh background-tile.asm`
+- Linux: `../build.sh background-tile.asm`
 
 The example should assemble/link/fix, creating a ready-to-run ROM. Symbol and map files will also be generated alongside the ROM file. Some examples include PNG assets which will be converted to 2bpp binary files and/or tilemaps.
 
