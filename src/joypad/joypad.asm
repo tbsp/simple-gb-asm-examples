@@ -63,9 +63,9 @@ EntryPoint:
     ld a, %11100100     ; Define a 4-shade palette from darkest (11) to lightest (00)
     ldh [rBGP], a       ; Set the background palette
 
-    ld a, -28           ; Load -28 into the register A
+    ld a, -28           ; Load -28 into the A register
     ldh [rSCX], a       ; Set SCX to center the joypad display horizontally
-    ld a, -60
+    ld a, -60           ; Load -60 into the A register
     ldh [rSCY], a       ; Set SCY to position the joypad vertically as desired
 
     ; Setup the VBlank interrupt
