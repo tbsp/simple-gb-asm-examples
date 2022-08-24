@@ -15,6 +15,8 @@ if [ -f $fn.gb ]
 fi
 
 echo "Asset conversion..."
+shopt -s nullglob # avoid errors if no assets are present
+
 # Convert *tilemap.png files to 2bpp format including a tilemap (remove duplicate tiles)
 for file in *tilemap.png; do
   rgbgfx -u -o ${file%.*}.2bpp -t ${file%.*}.tilemap $file;
