@@ -73,14 +73,13 @@ TileData:
     REPT 16
     db $00
     ENDR
-.ball ; For the ball tile we'll use a more verbose syntax so you can see how the tile is built
+.block ; For the block tile we'll use a more verbose syntax so you can see how the tile is built
     ;  low byte   high byte
-    db %00111100, %00111100 ; single row of 8 pixels
-    db %01011110, %01000010
-    db %10001101, %10000011
-    db %11011101, %10000011
-    db %11111101, %10000011
-    db %10111001, %11000111
-    db %01000010, %01111110
-    db %00111100, %00111100
-
+    db %00000000, %11111111 ; single row of 8 pixels
+    db %01000010, %10000001
+    db %00000000, %11111111
+    db %01000010, %10000001
+    db %00000000, %11111111
+    db %01000010, %10000001
+    db %00000000, %11111111
+    db %11111111, %11111111
