@@ -1,6 +1,6 @@
 # Simple Game Boy Assembly Examples
 
-This is a collection of simple examples for learners of assembly for the Nintendo Game Boy. They are meant to be primarily single-file examples with minimal dependencies which can be built easily to demonstrate commonly used hardware features of the platform. These are not meant to be good examples of how to structure/build complex projects or comprehensive tutorials.
+This is a collection of simple examples for learners of assembly for the Nintendo Game Boy. They are meant to be primarily single-file examples with minimal dependencies which can be built easily to demonstrate commonly used hardware features of the platform. These are not meant to be good examples of how to structure/build complex projects nor are they meant to be comprehensive tutorials.
 
 I hope someone finds them useful!
 
