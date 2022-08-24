@@ -1,8 +1,10 @@
 # Simple Game Boy Assembly Examples
 
-This is a collection of simple examples for learners of assembly for the Nintendo Game Boy. They are meant to be primarily single-file examples with minimal dependencies which can be built easily. These are not meant to be good examples of how to structure or build complex projects. They are also not meant to be comprehensive tutorials.
+This is a collection of simple examples for learners of assembly for the Nintendo Game Boy. They are meant to be primarily single-file examples with minimal dependencies which can be built easily to demonstrate commonly used hardware features of the platform. These are not meant to be good examples of how to structure/build complex projects or comprehensive tutorials.
 
-A simple batch file (Windows) and bash script (GNU/Linux) are provided for quick assembly/linking/fixing of the examples. They require [RGBDS](https://rgbds.gbdev.io/) to be accessible, either installed somewhere in the path or copied locally. Please see the [RGBDS installation instructions](https://rgbds.gbdev.io/install) for more information on installing RGBDS.
+I hope someone finds them useful!
+
+A simple batch file (Windows) and bash script (GNU/Linux) are provided for quick conversion/assembly/linking/fixing of the examples. They require [RGBDS](https://rgbds.gbdev.io/) to be accessible, either installed somewhere in the path or copied locally. Please see the [RGBDS installation instructions](https://rgbds.gbdev.io/install) for more information on installing RGBDS.
 
 # Building the Examples
 
@@ -11,7 +13,7 @@ To build an example, navigate to a given example's directory, such as `/src/back
 - Windows: `..\build.bat background-tile.asm`
 - Linux: `..\build.sh background-tile.asm`
 
-The example should assemble/link/fix, creating a ready-to-run ROM. Symbol and map files will also be generated alongside the ROM file.
+The example should assemble/link/fix, creating a ready-to-run ROM. Symbol and map files will also be generated alongside the ROM file. Some examples include PNG assets which will be converted to 2bpp binary files and/or tilemaps.
 
 # Helpful Resources
 
