@@ -63,7 +63,7 @@ EntryPoint:
     ld a, %11100100     ; Define a 4-shade palette from darkest (11) to lightest (00)
     ldh [rBGP], a       ; Set the background palette
 
-    ld a, -28           ; Load -28 into the A register
+    ld a, -32           ; Load -32 into the A register
     ldh [rSCX], a       ; Set SCX to center the joypad display horizontally
     ld a, -60           ; Load -60 into the A register
     ldh [rSCY], a       ; Set SCY to position the joypad vertically as desired
@@ -185,10 +185,10 @@ SECTION "Tilemap Locations", ROMX
 ; The sequence for each button is zero terminated. This isn't a particularly elegant way of
 ; defining which portions of the tilemap to write for which buttons, but it works.
 TilemapLocations:
-.A      db $0b, $98, $06, $0c, $98, $07, $2b, $98, $08, $2c, $98, $09, $00
-.B      db $28, $98, $06, $29, $98, $07, $48, $98, $08, $49, $98, $09, $00
-.Select db $44, $98, $05, $00
-.Start  db $46, $98, $05, $00
+.A      db $0a, $98, $06, $0b, $98, $07, $2a, $98, $08, $2b, $98, $09, $00
+.B      db $27, $98, $06, $28, $98, $07, $47, $98, $08, $48, $98, $09, $00
+.Select db $83, $98, $05, $00
+.Start  db $85, $98, $05, $00
 .Right  db $22, $98, $03, $00
 .Left   db $20, $98, $02, $00
 .Up     db $01, $98, $01, $00
