@@ -8,7 +8,7 @@ A simple batch file (Windows) and bash script (GNU/Linux) are provided for quick
 
 # Building the Examples
 
-To build an example, navigate to a given example's directory, such as `/src/background-tile`, and run:
+To build an example, navigate to a given example's directory, such as `/src/background-tile` in a terminal, and run:
 
 - Windows: `..\build.bat background-tile.asm`
 - Linux: `../build.sh background-tile.asm`
