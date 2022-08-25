@@ -31,7 +31,7 @@ The example should assemble/link/fix, creating a ready-to-run ROM. Symbol and ma
 |sprite             | Show two sprites manually copied to OAM RAM                           |![sprite](https://user-images.githubusercontent.com/10489588/186731710-10fbb01e-14cd-4744-84dc-c20e4f00db5b.png)                       |
 |oamdma             | Show 40 sprites copied using OAM DMA                                  |![oamdma](https://user-images.githubusercontent.com/10489588/186731729-c5997f17-951a-4acb-9509-a4c78b160212.png)                       |
 |vblank             | Use the vblank interrupt to limit main loop speed with an animation   |![vblank](https://user-images.githubusercontent.com/10489588/186731743-5c48bd21-405d-4d49-a0d5-defd07358a7c.png)                       |
-|joypad             | Poll the joypad and display the button states                         |![joypad](https://user-images.githubusercontent.com/10489588/186731756-4c535da9-38d0-4568-ab51-c85730863751.png)                       |
+|joypad             | Poll the joypad and display the button states                         |![joypad](https://user-images.githubusercontent.com/10489588/186732972-b61c374e-4e73-435e-aab3-509705a3ef5d.png)                       |
 
 
 # License
