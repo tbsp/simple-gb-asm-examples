@@ -134,9 +134,8 @@ SECTION "Joypad Routine", ROM0
 ; Update the newly pressed keys (hNewKeys) and the held keys (hCurrentKeys) in memory
 ; Note: This routine is written to be easier to understand, not to be optimized for speed or size
 UpdateJoypad:
-; TODO: Replace this code with naive code!
-	; Poll half the controller
-	ld a, P1F_GET_BTN   ; Load a flag into A to select reading the buttons
+    ; Poll half the controller
+    ld a, P1F_GET_BTN   ; Load a flag into A to select reading the buttons
     ldh [rP1], a        ; Write the flag to P1 to select which buttons to read
     ldh a, [rP1]        ; Perform a few dummy reads to allow the inputs to stabilize
     ldh a, [rP1]        ;  ...
