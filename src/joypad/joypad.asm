@@ -180,16 +180,26 @@ TileData:
 .end
 
 SECTION "Tilemap Locations", ROMX
-; A sequence of entries for each button made of: tilemap addr (little endian), tile index
-; The sequence for each button is zero terminated. This isn't a particularly elegant way of
-; defining which portions of the tilemap to write for which buttons, but it works.
+; Define a macro (provided by Rangi, thanks!) to easily specify the coordinates and IDs of the
+;  tiles that make up the joypad display.
+MACRO bmap ; y, x, tile_id
+    rept _NARG / 3
+        dw _SCRN0 + ((\1) * SCRN_VX_B) + (\2)
+        db \3
+        shift 3
+    endr
+    db $00 ; end
+ENDM
+
+; Each button has a zero-terminated list of entries for the tiles used to draw that button, with
+;  each entry made up of a tilemap address (little endian) and a tile index.
 TilemapLocations:
-.A      db $0a, $98, $06, $0b, $98, $07, $2a, $98, $08, $2b, $98, $09, $00
-.B      db $27, $98, $06, $28, $98, $07, $47, $98, $08, $48, $98, $09, $00
-.Select db $83, $98, $05, $00
-.Start  db $85, $98, $05, $00
-.Right  db $22, $98, $03, $00
-.Left   db $20, $98, $02, $00
-.Up     db $01, $98, $01, $00
-.Down   db $41, $98, $04, $00
+.A      bmap 0,10,$06, 0,11,$07, 1,10,$08, 1,11,$09
+.B      bmap 1, 7,$06, 1, 8,$07, 2, 7,$08, 2, 8,$09
+.Select bmap 4, 3,$05
+.Start  bmap 4, 5,$05
+.Right  bmap 1, 2,$03
+.Left   bmap 1, 0,$02
+.Up     bmap 0, 1,$01
+.Down   bmap 2, 1,$04
 .end
