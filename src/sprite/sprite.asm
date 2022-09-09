@@ -7,14 +7,15 @@ include "../hardware.inc"  ; Include hardware definitions so we can use nice nam
 
 ; Define a section that starts at the point the bootrom execution ends
 SECTION "Start", ROM0[$0100]
-    nop
     jp EntryPoint       ; Jump past the header space to our actual code
 
-    ds $150-$104, 0     ; Allocate space for RGBFIX to insert our ROM header
+    ds $150-@, 0        ; Allocate space for RGBFIX to insert our ROM header by allocating
+                        ;  the number of bytes from our current location (@) to the end of the
+                        ;  header ($150)
 
 EntryPoint:
     di                  ; Disable interrupts as we won't be using them
-    ld sp, $dfff        ; Set the stack pointer to the end of WRAM
+    ld sp, $e000        ; Set the stack pointer to the end of WRAM
 
     ; Turn off the LCD when it's safe to do so (during VBlank)
 .waitVBlank
