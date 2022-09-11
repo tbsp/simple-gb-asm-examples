@@ -77,9 +77,9 @@ EntryPoint:
     dec b               ; Decrement the loop counter in B
     jr nz, .copyLoop    ; If B isn't zero, continue looping
 
-    ; Setup the an object palette
+    ; Setup an object palette
     ld a, %11100100     ; Define a 4-shade palette from darkest (11) to lightest (00)
-    ldh [rOBP0], a      ; Set the onject palette 0
+    ldh [rOBP0], a      ; Set the object palette 0
 
     ; Ensure the sprite locations (in wShadowOAM) are initalized for OAM DMA
     call PopulateShadowOAM
