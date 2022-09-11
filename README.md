@@ -24,14 +24,15 @@ The example should assemble/link/fix, creating a ready-to-run ROM. Symbol and ma
 
 # Examples
 
-| Name              | Description                                                           | Screenshot                                                                                                                                |
-|-------------------|-----------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
-|background-tile    | Show a single background tile                                         |![background-tile](https://user-images.githubusercontent.com/10489588/186731675-1b7e7483-fbb8-4f5d-ba03-b18f044604f7.png)              |
-|background-tilemap | Show a background tilemap                                             |![background-tilemap](https://user-images.githubusercontent.com/10489588/186731700-fd887c03-a0de-4c83-b0c3-0b1bace5976e.png)              |
-|sprite             | Show two sprites manually copied to OAM RAM                           |![sprite](https://user-images.githubusercontent.com/10489588/186731710-10fbb01e-14cd-4744-84dc-c20e4f00db5b.png)                       |
-|oamdma             | Show 40 sprites copied using OAM DMA                                  |![oamdma](https://user-images.githubusercontent.com/10489588/186731729-c5997f17-951a-4acb-9509-a4c78b160212.png)                       |
-|vblank             | Use the vblank interrupt to limit main loop speed with an animation   |![vblank](https://user-images.githubusercontent.com/10489588/186731743-5c48bd21-405d-4d49-a0d5-defd07358a7c.png)                       |
-|joypad             | Poll the joypad and display the button states                         |![joypad](https://user-images.githubusercontent.com/10489588/186732972-b61c374e-4e73-435e-aab3-509705a3ef5d.png)                       |
+| Name                 | Description                                                           | Screenshot                                                                                                                                |
+|----------------------|-----------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
+|background-tile       | Show a single background tile                                         |![background-tile](https://user-images.githubusercontent.com/10489588/186731675-1b7e7483-fbb8-4f5d-ba03-b18f044604f7.png)              |
+|background-tilemap    | Show a background tilemap                                             |![background-tilemap](https://user-images.githubusercontent.com/10489588/186731700-fd887c03-a0de-4c83-b0c3-0b1bace5976e.png)              |
+|background-fullscreen | Show a fullscreen background image (360 unique tiles)                 |![background-fullscreen](https://user-images.githubusercontent.com/10489588/189512741-56bdcc08-67f6-40a1-87b6-bf478940d799.png)              |
+|sprite                | Show two sprites manually copied to OAM RAM                           |![sprite](https://user-images.githubusercontent.com/10489588/186731710-10fbb01e-14cd-4744-84dc-c20e4f00db5b.png)                       |
+|oamdma                | Show 40 sprites copied using OAM DMA                                  |![oamdma](https://user-images.githubusercontent.com/10489588/186731729-c5997f17-951a-4acb-9509-a4c78b160212.png)                       |
+|vblank                | Use the vblank interrupt to limit main loop speed with an animation   |![vblank](https://user-images.githubusercontent.com/10489588/186731743-5c48bd21-405d-4d49-a0d5-defd07358a7c.png)                       |
+|joypad                | Poll the joypad and display the button states                         |![joypad](https://user-images.githubusercontent.com/10489588/186732972-b61c374e-4e73-435e-aab3-509705a3ef5d.png)                       |
 
 
 # License
