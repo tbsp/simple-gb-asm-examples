@@ -141,10 +141,13 @@ SECTION "WaitVBlank", ROM0
 ;  but that scales poorly. Instead, we zero a flag, and then halt in a loop until our VBlank handler sets
 ;  that flag, letting us know it's fired.
 WaitVBlank:
+    xor a               ; Zero the hVBlankDone flag before starting our loop
+    ldh [hVBlankDone], a;  ...
+.loop
     halt                ; Halt the CPU, waiting until an interrupt fires (it could be STAT or VBlank)
     ldh a, [hVBlankDone]; Load the hVBlankDone flag value into A
     or a                ; This is a shortcut version of 'cp 0', to see if the flag has been set by our VBlank handler
-    jr z, WaitVBlank    ; If the flag isn't set, halt again
+    jr z, .loop         ; If the flag isn't set, halt again
     ret                 ; Return back to where the routine was called from
 
 SECTION "VBlank Variables", HRAM
