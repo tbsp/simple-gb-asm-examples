@@ -17,13 +17,18 @@ fi
 echo "Asset conversion..."
 shopt -s nullglob # avoid errors if no assets are present
 
-# Convert *tilemap.png files to 2bpp format including a tilemap (remove duplicate tiles)
-for file in *tilemap.png; do
+# Convert *-tilemap.png files to 2bpp format including a tilemap (remove duplicate tiles)
+for file in *-tilemap.png; do
   rgbgfx -u -o ${file%.*}.2bpp -t ${file%.*}.tilemap $file;
 done
 
-# Convert *tiles.png files to 2bpp format without a tilemap (keep duplicate tiles)
-for file in *tiles.png; do
+# Convert *-ztiles.png files to 2bpp format column-by-column without a tilemap (keep duplicate tiles)
+for file in *-ztiles.png; do
+  rgbgfx -Z -o ${file%.*}.2bpp $file;
+done
+
+# Convert *-tiles.png files to 2bpp format row-by-row without a tilemap (keep duplicate tiles)
+for file in *-tiles.png; do
   rgbgfx -o ${file%.*}.2bpp $file;
 done
 

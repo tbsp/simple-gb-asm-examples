@@ -9,11 +9,14 @@ set _fn=%~n1
 if exist %_fn%.gb del %_fn%.gb
 
 echo Asset conversion...
-rem Convert *tilemap.png files to 2bpp format including a tilemap (remove duplicate tiles)
-for %%f in (*tilemap.png) do rgbgfx -u -o %%~nf.2bpp -t %%~nf.tilemap "%%f"
+rem Convert *-tilemap.png files to 2bpp format including a tilemap (remove duplicate tiles)
+for %%f in (*-tilemap.png) do rgbgfx -u -o %%~nf.2bpp -t %%~nf.tilemap "%%f"
 
-rem Convert *tiles.png files to 2bpp format without a tilemap (keep duplicate tiles)
-for %%f in (*tiles.png) do rgbgfx -o %%~nf.2bpp "%%f"
+rem Convert *-ztiles.png files to 2bpp format column-by-column without a tilemap (keep duplicate tiles)
+for %%f in (*-ztiles.png) do rgbgfx -Z -o %%~nf.2bpp "%%f"
+
+rem Convert *-tiles.png files to 2bpp format row-by-row without a tilemap (keep duplicate tiles)
+for %%f in (*-tiles.png) do rgbgfx -o %%~nf.2bpp "%%f"
 
 echo Assembling...
 rgbasm -h -o%_fn%.o %1
