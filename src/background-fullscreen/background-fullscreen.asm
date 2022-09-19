@@ -6,7 +6,7 @@
 include "../hardware.inc"  ; Include hardware definitions so we can use nice names for things
 
 
-SECTION "MemCopy Routine", ROMX
+SECTION "MemCopy Routine", ROM0
 ; Since we're copying data few times, we'll define a reusable memory copy routine
 ; Copy BC bytes of data from HL to DE
 MemCopy:
