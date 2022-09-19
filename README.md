@@ -38,3 +38,5 @@ The example should assemble/link/fix, creating a ready-to-run ROM. Symbol and ma
 # License
 
 The code in this repository is licensed under the [CC0](https://creativecommons.org/publicdomain/zero/1.0/) license. *To the extent possible under law, all copyright and related or neighboring rights to code presented within simple-gb-asm-examples have been waived. This work is published from Canada.*
+
+The majority of the assets in this repository are licensed under the [CC0](https://creativecommons.org/publicdomain/zero/1.0/) license. Assets not covered by this license are covered by a less permissive CC license, with their licensing information provided in the source file where they are included.
