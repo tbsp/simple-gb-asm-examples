@@ -50,7 +50,7 @@ EntryPoint:
     dec bc              ; Decrement the loop counter in BC
     ld a, b             ; Load the value in B into A
     or c                ; Logical OR the value in A (from B) with C
-    jr nz, .clearLoop   ; If B and C are both zero, OR B will be zero, otherwise keep looping
+    jr nz, .clearLoop   ; If B and C are both zero, OR C will be zero, otherwise keep looping
 
     ; Setup palettes and scrolling
     ld a, %11100100     ; Define a 4-shade palette from darkest (11) to lightest (00)
