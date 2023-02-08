@@ -127,6 +127,6 @@ ANGLE = 0.0
         db (MUL(64.0, SIN(ANGLE))) >> 16 + 84 ; Y coordinate
         db (MUL(64.0, COS(ANGLE))) >> 16 + 84 ; X coordinate
         db 0, 0 ; tile index, attr
-ANGLE = ANGLE + 1638.4 ; 1638.4 = 65536 degrees / 40 entries
+ANGLE = ANGLE + 1.0 / 40 ; delta = 1 full turn / 40 entries
     ENDR
 .end

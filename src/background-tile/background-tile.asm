@@ -37,7 +37,7 @@ EntryPoint:
     dec b               ; Decrement the loop counter in B
     jr nz, .copyLoop    ; If B isn't zero, continue looping
 
-    ; This code writes 1 for our ball tile, and then fills the rest of the tilemap with zero
+    ; This code writes 1 for our tile, and then fills the rest of the tilemap with zero
     ld hl, _SCRN0       ; Point HL to the first byte of the tilemap ($9800)
     ld [hl], 1          ; Load one into the first byte of the tilemap, as pointed to by HL
     inc hl              ; Increment the destination pointer in HL
@@ -50,7 +50,7 @@ EntryPoint:
     dec bc              ; Decrement the loop counter in BC
     ld a, b             ; Load the value in B into A
     or c                ; Logical OR the value in A (from B) with C
-    jr nz, .clearLoop   ; If B and C are both zero, OR B will be zero, otherwise keep looping
+    jr nz, .clearLoop   ; If B and C are both zero, OR C will be zero, otherwise keep looping
 
     ; Setup palettes and scrolling
     ld a, %11100100     ; Define a 4-shade palette from darkest (11) to lightest (00)

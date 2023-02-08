@@ -200,5 +200,5 @@ SineTable:
 ANGLE = 0.0
     REPT 256
         db (MUL(64.0, SIN(ANGLE)) + 64.0) >> 16
-ANGLE = ANGLE + 256.0 ; 256.0 = 65536 degrees / 256 entries
+ANGLE = ANGLE + 1.0 / 256 ; delta = 1 full turn / 256 entries
     ENDR
