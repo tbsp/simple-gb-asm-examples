@@ -4,7 +4,7 @@
 
 function error {
 echo "Build failed."
-exit
+exit 1
 }
 
 fn=${1%.*}
