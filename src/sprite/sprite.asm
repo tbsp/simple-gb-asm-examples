@@ -20,14 +20,14 @@ EntryPoint:
     ; Turn off the LCD when it's safe to do so (during VBlank)
 .waitVBlank
     ldh a, [rLY]        ; Read the LY register to check the current scanline
-    cp SCRN_Y           ; Compare the current scanline to the first scanline of VBlank
+    cp SCREEN_HEIGHT_PX ; Compare the current scanline to the first scanline of VBlank
     jr c, .waitVBlank   ; Loop as long as the carry flag is set
     ld a, 0             ; Once we exit the loop we're safely in VBlank
     ldh [rLCDC], a      ; Disable the LCD (must be done during VBlank to protect the LCD)
 
     ; Copy our tile to VRAM
     ld hl, TileData     ; Load the source address of our tiles into HL
-    ld de, _VRAM        ; Load the destination address in VRAM into DE
+    ld de, STARTOF(VRAM); Load the destination address in VRAM into DE
     ld b, 16            ; Load the number of bytes to copy into B (16 bytes per tile)
 .copyLoop
     ld a, [hl]          ; Load a byte from the address HL points to into the register A
@@ -44,7 +44,7 @@ EntryPoint:
     ldh [rOBP1], a      ; Set the onject palette 1
 
     ; Set the attributes for a two sprites in OAMRAM
-    ld hl, _OAMRAM      ; Load the destination address in OAMRAM into HL
+    ld hl, STARTOF(OAM) ; Load the destination address in OAM into HL
 
     ; The first sprite is in the top-left corner of the screen and uses the "normal" palette
     ld a, 16            ; Load the value 16 into the A register
@@ -62,7 +62,7 @@ EntryPoint:
     ld [hli], a         ; Set the X coordinate (plus 8) for the sprite in OAMRAM, increment HL
     ld a, 0             ; Load the tile index 0 into the A register
     ld [hli], a         ; Set the tile index for the sprite in OAMRAM, increment HL
-    ld a, OAMF_YFLIP | OAMF_PAL1 ; Load the flags to Y flip and use OBP1 for this sprite into A
+    ld a, OAM_YFLIP | OAM_PAL1 ; Load the flags to Y flip and use OBP1 for this sprite into A
     ld [hli], a         ; Set the attributes (flips and palette) for the sprite in OAMRAM, increment HL
 
     ; Zero the Y coordinates of the remaining entries to avoid garbage sprites
@@ -78,8 +78,8 @@ EntryPoint:
     jr nz, .oamClearLoop; If B isn't zero, continue looping
 
     ; Combine flag constants defined in hardware.inc into a single value with logical ORs and load it into A
-    ; Note that some of these constants (LCDCF_BGOFF, LCDCF_OBJ8, LCDCF_WINOFF) are zero, but are included for clarity
-    ld a, LCDCF_ON | LCDCF_BGOFF | LCDCF_OBJ8 | LCDCF_OBJON | LCDCF_WINOFF
+    ; Note that some of these constants (LCDC_BG_OFF, LCDC_OBJ_8, LCDC_WIN_OFF) are zero, but are included for clarity
+    ld a, LCDC_ON | LCDC_BG_OFF | LCDC_OBJ_8 | LCDC_OBJ_ON | LCDC_WIN_OFF
     ldh [rLCDC], a      ; Enable and configure the LCD to show the background
 
 LoopForever:

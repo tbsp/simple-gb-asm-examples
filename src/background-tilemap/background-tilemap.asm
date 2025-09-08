@@ -20,14 +20,14 @@ EntryPoint:
     ; Turn off the LCD when it's safe to do so (during VBlank)
 .waitVBlank
     ldh a, [rLY]        ; Read the LY register to check the current scanline
-    cp SCRN_Y           ; Compare the current scanline to the first scanline of VBlank
+    cp SCREEN_HEIGHT_PX ; Compare the current scanline to the first scanline of VBlank
     jr c, .waitVBlank   ; Loop as long as the carry flag is set
     ld a, 0             ; Once we exit the loop we're safely in VBlank
     ldh [rLCDC], a      ; Disable the LCD (must be done during VBlank to protect the LCD)
 
     ; Copy our tiles to VRAM
     ld hl, TileData     ; Load the source address of our tiles into HL
-    ld de, _VRAM        ; Load the destination address in VRAM into DE
+    ld de, STARTOF(VRAM); Load the destination address in VRAM into DE
     ld bc, TileData.end - TileData ; Load the number of bytes to copy into BC
 .copyLoop
     ld a, [hl]          ; Load a byte from the address HL points to into the A register
@@ -41,10 +41,10 @@ EntryPoint:
 
     ; Copy our 20x18 tilemap to VRAM
     ld de, TilemapData  ; Load the source address of our tilemap into DE
-    ld hl, _SCRN0       ; Point HL to the first byte of the tilemap ($9800)
-    ld b, SCRN_Y_B      ; Load the height of the screen in tiles into B (18 tiles)
+    ld hl, TILEMAP0     ; Point HL to the first byte of the tilemap ($9800)
+    ld b, SCREEN_HEIGHT ; Load the height of the screen in tiles into B (18 tiles)
 .tilemapLoop
-    ld c, SCRN_X_B      ; Load the width of the screen in tiles into C (20 tiles)
+    ld c, SCREEN_WIDTH  ; Load the width of the screen in tiles into C (20 tiles)
 .rowLoop
     ld a, [de]          ; Load a byte from the address DE points to into the A register
     ld [hli], a         ; Load the byte in the A register to the address HL points to and increment HL
@@ -52,7 +52,7 @@ EntryPoint:
     dec c               ; Decrement the loop counter in C (tiles per row)
     jr nz, .rowLoop     ; If C isn't zero, continue copying bytes for this row
     push de             ; Push the contents of the register pair DE to the stack
-    ld de, SCRN_VX_B - SCRN_X_B ; Load the number of tiles remaining in the row into DE
+    ld de, TILEMAP_WIDTH - SCREEN_WIDTH ; Load the number of tiles remaining in the row into DE
     add hl, de          ; Add the remaining row length to HL, advancing the destination pointer to the next row
     pop de              ; Recover the former contents of the the register pair DE
     dec b               ; Decrement the loop counter in B (total rows)
@@ -67,8 +67,8 @@ EntryPoint:
     ldh [rSCY], a       ;  corner of the background in the top-left corner of the screen
 
     ; Combine flag constants defined in hardware.inc into a single value with logical ORs and load it into A
-    ; Note that some of these constants (LCDCF_OBJOFF, LCDCF_WINOFF) are zero, but are included for clarity
-    ld a, LCDCF_ON | LCDCF_BG8000 | LCDCF_BGON | LCDCF_OBJOFF | LCDCF_WINOFF
+    ; Note that some of these constants (LCDC_OBJ_OFF, LCDC_WIN_OFF) are zero, but are included for clarity
+    ld a, LCDC_ON | LCDC_BLOCK01 | LCDC_BG_ON | LCDC_OBJ_OFF | LCDC_WIN_OFF
     ldh [rLCDC], a      ; Enable and configure the LCD to show the background
 
 LoopForever:

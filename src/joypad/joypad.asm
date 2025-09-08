@@ -27,7 +27,7 @@ EntryPoint:
     ; Turn off the LCD when it's safe to do so (during VBlank)
 .waitVBlank
     ldh a, [rLY]        ; Read the LY register to check the current scanline
-    cp SCRN_Y           ; Compare the current scanline to the first scanline of VBlank
+    cp SCREEN_HEIGHT_PX ; Compare the current scanline to the first scanline of VBlank
     jr c, .waitVBlank   ; Loop as long as the carry flag is set
     ld a, 0             ; Once we exit the loop we're safely in VBlank
     ldh [rLCDC], a      ; Disable the LCD (must be done during VBlank to protect the LCD)
@@ -36,7 +36,7 @@ EntryPoint:
 
     ; Copy our tiles to VRAM
     ld hl, TileData     ; Load the source address of our tiles into HL
-    ld de, _VRAM        ; Load the destination address in VRAM into DE
+    ld de, STARTOF(VRAM); Load the destination address in VRAM into DE
     ld bc, TileData.end - TileData ; Load the number of bytes to copy into BC
 .copyLoop
     ld a, [hl]          ; Load a byte from the address HL points to into the register A
@@ -49,8 +49,8 @@ EntryPoint:
     jr nz, .copyLoop    ; If B and C are both zero, OR B will be zero, otherwise keep looping
 
     ; Fill the tilemap with tile zero
-    ld hl, _SCRN0       ; Point HL to the first byte of the tilemap ($9800)
-    ld bc, $400         ; Load the size of the remaining tilemap into BC (32x32=1024, or $400)
+    ld hl, TILEMAP0     ; Point HL to the first byte of the tilemap ($9800)
+    ld bc, TILEMAP1 - TILEMAP0 ; Load the size of the remaining tilemap into BC
     ld d, 0             ; Load the value to fill the tilemap with into D
 .clearLoop
     ld [hl], d          ; Load the value in D into the location pointed to by HL
@@ -70,15 +70,15 @@ EntryPoint:
     ldh [rSCY], a       ; Set SCY to position the joypad vertically as desired
 
     ; Setup the VBlank interrupt
-    ld a, IEF_VBLANK    ; Load the flag to enable the VBlank interrupt into A
+    ld a, IE_VBLANK     ; Load the flag to enable the VBlank interrupt into A
     ldh [rIE], a        ; Load the prepared flag into the interrupt enable register
     xor a               ; Set A to zero
     ldh [rIF], a        ; Clear any lingering flags from the interrupt flag register to avoid false interrupts
     ei                  ; enable interrupts!
 
     ; Combine flag constants defined in hardware.inc into a single value with logical ORs and load it into A
-    ; Note that some of these constants (LCDCF_OBJOFF, LCDCF_WINOFF) are zero, but are included for clarity
-    ld a, LCDCF_ON | LCDCF_BG8000 | LCDCF_BGON | LCDCF_OBJOFF | LCDCF_WINOFF
+    ; Note that some of these constants (LCDC_OBJ_OFF, LCDC_WIN_OFF) are zero, but are included for clarity
+    ld a, LCDC_ON | LCDC_BLOCK01 | LCDC_BG_ON | LCDC_OBJ_OFF | LCDC_WIN_OFF
     ldh [rLCDC], a      ; Enable and configure the LCD to show the background
 
 
@@ -115,7 +115,7 @@ UpdateDisplay:
 
 .waitVRAM
     ldh     a, [rSTAT]  ; Check the STAT register to figure out which mode the LCD is in
-    and     STATF_BUSY  ; AND the value to see if VRAM access is safe
+    and     STAT_BUSY   ; AND the value to see if VRAM access is safe
     jr      nz, .waitVRAM ; Loop until VRAM access is safe
 
     ld a, [hli]         ; Load the tile index we'd like to write
@@ -136,7 +136,7 @@ SECTION "Joypad Routine", ROM0
 ; Note: This routine is written to be easier to understand, not to be optimized for speed or size
 UpdateJoypad:
     ; Poll half the controller
-    ld a, P1F_GET_BTN   ; Load a flag into A to select reading the buttons
+    ld a, JOYP_GET_BUTTONS ; Load a flag into A to select reading the buttons
     ldh [rP1], a        ; Write the flag to P1 to select which buttons to read
     ldh a, [rP1]        ; Perform a few dummy reads to allow the inputs to stabilize
     ldh a, [rP1]        ;  ...
@@ -147,7 +147,7 @@ UpdateJoypad:
     or $f0              ; Set the upper 4 bits, and leave the action button states in the lower 4 bits
     ld b, a             ; Store the state of the action buttons in B
 
-    ld a, P1F_GET_DPAD  ; Load a flag into A to select reading the dpad
+    ld a, JOYP_GET_CTRL_PAD ; Load a flag into A to select reading the dpad
     ldh [rP1], a        ; Write the flag to P1 to select which buttons to read
     call .knownRet      ; Call a known `ret` instruction to give the inputs to stabilize
     ldh a, [rP1]        ; Perform a few dummy reads to allow the inputs to stabilize
@@ -162,7 +162,7 @@ UpdateJoypad:
     xor b               ; A now contains the pressed action buttons and dpad directions
     ld b, a             ; Move the key states to B
 
-    ld a, P1F_GET_NONE  ; Load a flag into A to read nothing
+    ld a, JOYP_GET_NONE ; Load a flag into A to read nothing
     ldh [rP1], a        ; Write the flag to P1 to disable button reading
 
     ldh a, [hCurrentKeys] ; Load the previous button+dpad state from HRAM
@@ -185,7 +185,7 @@ SECTION "Tilemap Locations", ROMX
 ;  tiles that make up the joypad display.
 MACRO bmap ; y, x, tile_id
     rept _NARG / 3
-        dw _SCRN0 + ((\1) * SCRN_VX_B) + (\2)
+        dw TILEMAP0 + ((\1) * TILEMAP_WIDTH) + (\2)
         db \3
         shift 3
     endr
