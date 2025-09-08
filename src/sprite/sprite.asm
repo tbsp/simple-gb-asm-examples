@@ -3,7 +3,7 @@
 ; Tested with RGBDS 1.0.0
 ; License: CC0 (https://creativecommons.org/publicdomain/zero/1.0/)
 
-include "../hardware.inc"  ; Include hardware definitions so we can use nice names for things
+include "hardware.inc"  ; Include hardware definitions so we can use nice names for things
 
 ; Define a section that starts at the point the bootrom execution ends
 SECTION "Start", ROM0[$0100]
