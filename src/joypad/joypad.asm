@@ -1,6 +1,6 @@
 ; Joypad Example for the Nintendo Game Boy
 ; by Dave VanEe 2022
-; Tested with RGBDS 0.6.0
+; Tested with RGBDS 1.0.0
 ; License: CC0 (https://creativecommons.org/publicdomain/zero/1.0/)
 
 include "../hardware.inc"  ; Include hardware definitions so we can use nice names for things
