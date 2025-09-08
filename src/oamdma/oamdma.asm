@@ -122,11 +122,9 @@ SECTION "Static OAM Data", ROMX
 ;  assembly time using RGBDS trigonometry functions.
 ; See: https://rgbds.gbdev.io/docs/master/rgbasm.5#Fixed-point_expressions
 StaticOAMData:
-DEF ANGLE = 0.0
-    REPT 40
-        db (MUL(64.0, SIN(ANGLE))) >> 16 + 84 ; Y coordinate
-        db (MUL(64.0, COS(ANGLE))) >> 16 + 84 ; X coordinate
-        db 0, 0 ; tile index, attr
-DEF ANGLE = ANGLE + 1.0 / 40 ; delta = 1 full turn / 40 entries
-    ENDR
+FOR ANGLE, 0.0, 1.0, 1.0 / 40 ; delta = 1 full turn / 40 entries
+	db SIN(ANGLE) >> 10 + 84 ; Y coordinate
+	db COS(ANGLE) >> 10 + 84 ; X coordinate
+	db 0, 0 ; tile index, attr
+ENDR
 .end
