@@ -197,8 +197,8 @@ SECTION "Sine Table", ROMX, ALIGN[8]
 ; Generate a 256 byte lookup of sine values ranging from 0-128, aligned to a page for automatic wrapping
 ; See: https://rgbds.gbdev.io/docs/master/rgbasm.5#Fixed-point_expressions
 SineTable:
-ANGLE = 0.0
+DEF ANGLE = 0.0
     REPT 256
         db (MUL(64.0, SIN(ANGLE)) + 64.0) >> 16
-ANGLE = ANGLE + 1.0 / 256 ; delta = 1 full turn / 256 entries
+DEF ANGLE = ANGLE + 1.0 / 256 ; delta = 1 full turn / 256 entries
     ENDR

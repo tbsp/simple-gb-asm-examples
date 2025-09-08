@@ -19,7 +19,7 @@ rem Convert *-tiles.png files to 2bpp format row-by-row without a tilemap (keep 
 for %%f in (*-tiles.png) do rgbgfx -o %%~nf.2bpp "%%f"
 
 echo Assembling...
-rgbasm -h -o%_fn%.o %1
+rgbasm -o%_fn%.o %1
 if ERRORLEVEL 1 goto :error
 echo Linking...
 rgblink -n%_fn%.sym -m%_fn%.map -o %_fn%.gb %_fn%.o
