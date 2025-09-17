@@ -13,7 +13,7 @@
 ;  automatically generated tilemap as in the background-filemap example, the tilemap is pre-constructed with tiles organized
 ;  such that walkable tiles start at 0 and are sequential to simplify the collision check.
 
-include "../hardware.inc"  ; Include hardware definitions so we can use nice names for things
+include "hardware.inc"  ; Include hardware definitions so we can use nice names for things
 
 ;============================================================================================================================
 ; Game Constants

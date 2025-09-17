@@ -3,7 +3,7 @@
 ; Tested with RGBDS 1.0.0
 ; License: CC0 (https://creativecommons.org/publicdomain/zero/1.0/)
 
-include "../hardware.inc"  ; Include hardware definitions so we can use nice names for things
+include "hardware.inc"  ; Include hardware definitions so we can use nice names for things
 
 ; The VBlank vector is where execution is passed when the VBlank interrupt fires
 SECTION "VBlank Vector", ROM0[$40]
