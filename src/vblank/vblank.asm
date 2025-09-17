@@ -1,6 +1,6 @@
 ; VBlank (with OAM DMA) Example for the Nintendo Game Boy
 ; by Dave VanEe 2022
-; Tested with RGBDS 0.6.0
+; Tested with RGBDS 1.0.0
 ; License: CC0 (https://creativecommons.org/publicdomain/zero/1.0/)
 
 include "../hardware.inc"  ; Include hardware definitions so we can use nice names for things
@@ -197,8 +197,6 @@ SECTION "Sine Table", ROMX, ALIGN[8]
 ; Generate a 256 byte lookup of sine values ranging from 0-128, aligned to a page for automatic wrapping
 ; See: https://rgbds.gbdev.io/docs/master/rgbasm.5#Fixed-point_expressions
 SineTable:
-ANGLE = 0.0
-    REPT 256
-        db (MUL(64.0, SIN(ANGLE)) + 64.0) >> 16
-ANGLE = ANGLE + 1.0 / 256 ; delta = 1 full turn / 256 entries
-    ENDR
+FOR ANGLE, 0.0, 1.0, 1.0 / 256 ; delta = 1 full turn / 256 entries
+	db (MUL(64.0, SIN(ANGLE)) + 64.0) >> 16
+ENDR
