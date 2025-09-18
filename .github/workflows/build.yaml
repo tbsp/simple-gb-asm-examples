@@ -1,0 +1,68 @@
+name: Build ROMs
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: 42 06 9 * *
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Check that all examples build correctly
+    strategy:
+      matrix:
+        os:
+          - windows-latest
+          - ubuntu-latest
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    env:
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: Retrieve repo
+        uses: actions/checkout@v4
+      - name: Install RGBDS
+        run: |
+          set -u
+          assets=$(gh api repos/gbdev/rgbds/releases/latest --template '{{range .assets}}[{{.name}}]='\''{{.browser_download_url}}'\''{{"\n"}}{{end}}' | LC_ALL=C tr -dC '[:alnum:][:space:][]=\-_.:/'\')
+          echo "ASSETS=($assets)"
+          declare -A ASSETS
+          eval "ASSETS=($assets)"
+          case "${{ matrix.os }}" in
+            windows-*)
+              name=$(printf '%s\n' "${!ASSETS[@]}" | grep -F win64.zip)
+              echo "::notice file=$name::Downloading ${ASSETS[$name]}"
+              curl -Lo rgbds.zip "${ASSETS[$name]}"
+              unzip rgbds.zip
+              PATH="$PWD:$PATH"
+              echo "PATH=$PATH" >>"$GITHUB_ENV"
+            ;;
+            *) # Assuming Linux.
+              name=$(printf '%s\n' "${!ASSETS[@]}" | grep -F linux-x86_64.tar.xz)
+              echo "::notice file=$name::Downloading ${ASSETS[$name]}"
+              mkdir rgbds
+              curl -L "${ASSETS[$name]}" | tar xvJC rgbds
+              ( cd rgbds && sudo ./install.sh )
+            ;;
+          esac
+          which rgbasm
+          rgbasm --version
+      - name: Build ROMs
+        run: |
+          cd src
+          for d in */; do
+            ( cd $d && ../build.sh *.asm ) || break
+          done
+      - name: Upload built ROMs
+        uses: actions/upload-artifact@v4
+        with:
+          name: Built ROMs
+          path: |
+            src/*/*.gb
+            src/*/*.sym
+            src/*/*.map
+        if: "!startsWith(matrix.os, 'windows')"
