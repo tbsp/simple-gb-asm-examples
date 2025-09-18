@@ -81,7 +81,7 @@ EntryPoint:
     ; Turn off the LCD when it's safe to do so (during VBlank)
 .waitVBlank
     ldh a, [rLY]        ; Read the LY register to check the current scanline
-    cp SCRN_Y           ; Compare the current scanline to the first scanline of VBlank
+    cp SCREEN_HEIGHT_PX ; Compare the current scanline to the first scanline of VBlank
     jr c, .waitVBlank   ; Loop as long as the carry flag is set
     xor a               ; Once we exit the loop we're safely in VBlank
     ldh [rLCDC], a      ; Disable the LCD (must be done during VBlank to protect the LCD)
@@ -100,21 +100,21 @@ EntryPoint:
 
     ; Copy our sprite and background tiles to VRAM
     ld hl, SpriteTileData ; Load the source address of our tiles into HL
-    ld de, _VRAM        ; Load the destination address in VRAM into DE
+    ld de, STARTOF(VRAM) ; Load the destination address in VRAM into DE
     ld bc, SpriteTileData.end - SpriteTileData ; Load the number of bytes to copy into BC
     call MemCopy        ; Call our general-purpose memory copy routine
 
     ld hl, BackgroundTileData ; Load the source address of our tiles into HL
-    ld de, _VRAM+$1000  ; Load the destination address in VRAM into DE
+    ld de, STARTOF(VRAM)+$1000 ; Load the destination address in VRAM into DE
     ld bc, BackgroundTileData.end - BackgroundTileData ; Load the number of bytes to copy into BC
     call MemCopy        ; Call our general-purpose memory copy routine
 
     ; Copy our 20x18 tilemap to VRAM
     ld de, TilemapData  ; Load the source address of our tilemap into DE
-    ld hl, _SCRN0       ; Point HL to the first byte of the tilemap ($9800)
-    ld b, SCRN_Y_B      ; Load the height of the screen in tiles into B (18 tiles)
+    ld hl, TILEMAP0     ; Point HL to the first byte of the tilemap ($9800)
+    ld b, SCREEN_HEIGHT ; Load the height of the screen in tiles into B (18 tiles)
 .tilemapLoop
-    ld c, SCRN_X_B      ; Load the width of the screen in tiles into C (20 tiles)
+    ld c, SCREEN_WIDTH  ; Load the width of the screen in tiles into C (20 tiles)
 .rowLoop
     ld a, [de]          ; Load a byte from the address DE points to into the A register
     ld [hli], a         ; Load the byte in the A register to the address HL points to and increment HL
@@ -122,7 +122,7 @@ EntryPoint:
     dec c               ; Decrement the loop counter in C (tiles per row)
     jr nz, .rowLoop     ; If C isn't zero, continue copying bytes for this row
     push de             ; Push the contents of the register pair DE to the stack
-    ld de, SCRN_VX_B - SCRN_X_B ; Load the number of tiles remaining in the row into DE
+    ld de, TILEMAP_WIDTH - SCREEN_WIDTH ; Load the number of tiles remaining in the row into DE
     add hl, de          ; Add the remaining row length to HL, advancing the destination pointer to the next row
     pop de              ; Recover the former contents of the the register pair DE
     dec b               ; Decrement the loop counter in B (total rows)
@@ -162,14 +162,14 @@ EntryPoint:
     ld [hli], a         ; Set the starting wPlayer.facing value in WRAM
 
     ; Setup the VBlank interrupt
-    ld a, IEF_VBLANK    ; Load the flag to enable the VBlank interrupt into A
+    ld a, IE_VBLANK     ; Load the flag to enable the VBlank interrupt into A
     ldh [rIE], a        ; Load the prepared flag into the interrupt enable register
     xor a               ; Set A to zero
     ldh [rIF], a        ; Clear any lingering flags from the interrupt flag register to avoid false interrupts
     ei                  ; enable interrupts!
 
     ; Combine flag constants defined in hardware.inc into a single value with logical ORs and load it into A
-    ld a, LCDCF_ON | LCDCF_BG8800 | LCDCF_BGON | LCDCF_OBJ16 | LCDCF_OBJON | LCDCF_WINOFF
+    ld a, LCDC_ON | LCDC_BLOCK21 | LCDC_BG_ON | LCDC_OBJ_16 | LCDC_OBJ_ON | LCDC_WIN_OFF
     ldh [rLCDC], a      ; Enable and configure the LCD to show the background and objects
 
 ;============================================================================================================================
@@ -194,19 +194,19 @@ SECTION "Main Routines", ROMX
 ; Process the user's inputs and update the game state accordingly
 ProcessInput:
     ldh a, [hNewKeys]   ; Load the newly pressed keys byte into A
-    bit PADB_LEFT, a    ; Check the state of the LEFT bit in A
+    bit B_PAD_LEFT, a   ; Check the state of the LEFT bit in A
     ld bc, $00ff        ; Preload B/C with dy/dx for left movement (0, -1)
     ld d, FACE_LEFT     ; Preload D with the facing value for LEFT
     jr nz, .attemptMove ; If the bit was set, jump to attempt movement in that direction
-    bit PADB_RIGHT, a   ; Check the state of the RIGHT bit in A
+    bit B_PAD_RIGHT, a  ; Check the state of the RIGHT bit in A
     ld bc, $0001        ; Preload B/C with dy/dx for left movement (0, +1)
     ld d, FACE_RIGHT    ; Preload D with the facing value for RIGHT
     jr nz, .attemptMove ; If the bit was set, jump to attempt movement in that direction
-    bit PADB_UP, a      ; Check the state of the UP bit in A
+    bit B_PAD_UP, a     ; Check the state of the UP bit in A
     ld bc, $ff00        ; Preload B/C with dy/dx for left movement (-1, 0)
     ld d, FACE_UP       ; Preload D with the facing value for UP
     jr nz, .attemptMove ; If the bit was set, jump to attempt movement in that direction
-    bit PADB_DOWN, a    ; Check the state of the DOWN bit in A
+    bit B_PAD_DOWN, a   ; Check the state of the DOWN bit in A
     ld bc, $0100        ; Preload B/C with dy/dx for left movement (+1, 0)
     ld d, FACE_DOWN     ; Preload D with the facing value for DOWN
     jr nz, .attemptMove ; If the bit was set, jump to attempt movement in that direction
@@ -250,7 +250,7 @@ GetTileID:
     ld a, b             ; Load the Y coordinate into A
     or a                ; Check if the Y coordinate is zero
     jr z, .yZero        ; If zero, skip the Y seeking code
-    ld de, SCRN_X_B     ; Load the number of tiles per row of TilemapData into DE
+    ld de, SCREEN_WIDTH ; Load the number of tiles per row of TilemapData into DE
 .yLoop
     add hl, de          ; Add the number of tiles per row to the pointer in HL
     dec b               ; Decrease the loop counter in B
@@ -316,11 +316,9 @@ PopulateShadowOAM:
     ld b, a             ; Load zero (from the prior use) into B, since A will be used to check loop completion
 .clearOAM
     ld [hl], b          ; Set the Y coordinate of this OAM entry to zero to hide it
-    inc l               ; Advance 4 bytes to the next OAM entry
-    inc l               ;  ...
-    inc l               ;  ...
-    inc l               ;  ...
     ld a, l             ; Load the low byte of the shadow OAM pointer into A
+    add OBJ_SIZE        ; Advance 4 bytes to the next OAM entry
+    ld l, a             ; Store the new low byte of the pointer in L
     cp LOW(wShadowOAM.end) ; Compare the low byte to the end of wShadowoAM
     jr nz, .clearOAM    ; Loop until we've hidden every unused sprite
     
@@ -361,7 +359,7 @@ SECTION "Joypad Routine", ROM0
 ; Note: This routine is written to be easier to understand, not to be optimized for speed or size
 UpdateJoypad:
     ; Poll half the controller
-    ld a, P1F_GET_BTN   ; Load a flag into A to select reading the buttons
+    ld a, JOYP_GET_BUTTONS ; Load a flag into A to select reading the buttons
     ldh [rP1], a        ; Write the flag to P1 to select which buttons to read
     ldh a, [rP1]        ; Perform a few dummy reads to allow the inputs to stabilize
     ldh a, [rP1]        ;  ...
@@ -372,7 +370,7 @@ UpdateJoypad:
     or $f0              ; Set the upper 4 bits, and leave the action button states in the lower 4 bits
     ld b, a             ; Store the state of the action buttons in B
 
-    ld a, P1F_GET_DPAD  ; Load a flag into A to select reading the dpad
+    ld a, JOYP_GET_CTRL_PAD ; Load a flag into A to select reading the dpad
     ldh [rP1], a        ; Write the flag to P1 to select which buttons to read
     call .knownRet      ; Call a known `ret` instruction to give the inputs to stabilize
     ldh a, [rP1]        ; Perform a few dummy reads to allow the inputs to stabilize
@@ -387,7 +385,7 @@ UpdateJoypad:
     xor b               ; A now contains the pressed action buttons and dpad directions
     ld b, a             ; Move the key states to B
 
-    ld a, P1F_GET_NONE  ; Load a flag into A to read nothing
+    ld a, JOYP_GET_NONE ; Load a flag into A to read nothing
     ldh [rP1], a        ; Write the flag to P1 to disable button reading
 
     ldh a, [hCurrentKeys] ; Load the previous button+dpad state from HRAM
@@ -408,7 +406,7 @@ SECTION "Shadow OAM", WRAM0, ALIGN[8]
 ;  and then use our OAM DMA routine to copy it quickly to OAMRAM when desired. OAM DMA can only operate
 ;  on a block of data that starts at a page boundary, which is why we use ALIGN[8].
 wShadowOAM:
-    ds OAM_COUNT * 4
+    ds OAM_SIZE
 .end
 
 SECTION "OAM DMA Routine", ROMX
