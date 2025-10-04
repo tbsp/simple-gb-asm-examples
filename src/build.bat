@@ -10,7 +10,7 @@ if exist %_fn%.gb del %_fn%.gb
 
 echo Asset conversion...
 rem Convert *-tilemap.png files to 2bpp format including a tilemap (remove duplicate tiles)
-for %%f in (*-tilemap.png) do rgbgfx -u -o %%~nf.2bpp -t %%~nf.tilemap "%%f"
+for %%f in (*-tilemap.png) do rgbgfx -u -o %%~nf.2bpp -T "%%f"
 
 rem Convert *-ztiles.png files to 2bpp format column-by-column without a tilemap (keep duplicate tiles)
 for %%f in (*-ztiles.png) do rgbgfx -Z -o %%~nf.2bpp "%%f"

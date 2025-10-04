@@ -19,7 +19,7 @@ shopt -s nullglob # avoid errors if no assets are present
 
 # Convert *-tilemap.png files to 2bpp format including a tilemap (remove duplicate tiles)
 for file in *-tilemap.png; do
-  rgbgfx -u -o ${file%.*}.2bpp -t ${file%.*}.tilemap $file;
+  rgbgfx -u -o ${file%.*}.2bpp -T $file;
 done
 
 # Convert *-ztiles.png files to 2bpp format column-by-column without a tilemap (keep duplicate tiles)
